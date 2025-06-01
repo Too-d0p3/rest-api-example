@@ -1,6 +1,6 @@
 {
     "$schema": "https://getcomposer.org/schema.json",
-    "name": "ondrejnevrela/user-article-api",
+    "name": "ondrejnevrela/rest-api-example",
     "type": "project",
     "description": "Ukázkový REST API projekt pro správu uživatelů a článků postavený na Symfony 6, Doctrine a JWT autentizaci.",
     "keywords": ["symfony", "rest", "api", "jwt", "doctrine", "uživatelé", "články"],
