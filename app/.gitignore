@@ -1,0 +1,92 @@
+### Symfony ###
+.env
+.env.local
+.env.*.local
+!/.env.example # Ujistí, že .env.example JE commitován
+!/.env.test.local.dist # Pro testovací prostředí, pokud používáš specifickou dist konfiguraci
+var/
+vendor/
+public/bundles/
+public/build/ # Pro Symfony Encore nebo Webpack
+public/hot    # Pro Symfony Encore
+# node_modules/ # Pokud bys používal Node.js pro frontend build
+
+# Composer
+composer.phar
+# composer.lock # Symfony standardně doporučuje commitovat composer.lock, proto je zde zakomentován.
+                # Pokud ho nechceš, odkomentuj. Pro konzistenci prostředí je lepší ho commitovat.
+
+# PHPUnit
+# /phpunit.xml # Commituj, pokud obsahuje standardní konfiguraci. Ignoruj, pokud máš lokální úpravy.
+               # Standardní phpunit.xml.dist by měl být commitován.
+/phpunit.result.cache
+/build/coverage/
+/coverage/
+/build/logs/
+# /tests/.phpunit.result.cache # Někdy PHPUnit vytváří cache i zde
+
+# Doctrine
+# SQLite databázové soubory jsou pokryty obecným var/
+# var/data.db
+# var/test.db
+# var/cache/ je pokryto var/
+
+# JWT Keys
+# Důležité: Privátní klíč by NIKDY neměl být v Gitu.
+# Veřejný klíč může být někdy commitován, pokud to usnadňuje deployment,
+# ale bezpečnější je oba generovat při nasazení/setupu a chránit passphrase.
+# V tomto .gitignore explicitně ignorujeme oba soubory .pem, pokud by byly v config/jwt/.
+/config/jwt/private.pem
+/config/jwt/public.pem
+# Můžeš zvážit přidání prázdného .gitignore souboru do config/jwt/,
+# aby adresář existoval, ale jeho obsah (klíče) byl ignorován:
+# /config/jwt/.gitignore
+# s obsahem:
+# *
+# !.gitignore
+
+# Logs
+*.log
+logs/
+# var/log/ je pokryto var/
+
+# Docker
+# Pokud máš lokální přepisovací soubory pro docker-compose
+docker-compose.override.yml
+.docker/data/ # Nebo jiné adresáře s perzistentními daty Docker volumes, které nemají být v Gitu
+
+# IDE / Editor specific
+.idea/
+.vscode/
+*.swp
+*~
+.project
+.settings/
+nbproject/
+
+# OS generated files
+.DS_Store
+Thumbs.db
+ehthumbs.db
+
+# Compiled files or caches
+*.com
+*.class
+*.dll
+*.exe
+*.o
+*.so
+
+# Archives
+*.7z
+*.dmg
+*.gz
+*.iso
+*.jar
+*.rar
+*.tar
+*.zip
+
+# User-specific local configuration (if any)
+# Example:
+# local.settings.php

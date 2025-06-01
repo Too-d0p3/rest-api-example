@@ -1,0 +1,86 @@
+\
+### Symfony ###
+.env
+.env.local
+.env.*.local
+!/.env.example
+!/.env.test.local.dist
+var/
+vendor/
+public/bundles/
+public/build/
+public/hot
+# Potential build directory for frontend assets if used
+# node_modules/
+
+# Composer
+composer.phar
+composer.lock # Keep if you want to lock dependencies for everyone, ignore if each dev manages their own (generally recommended to commit)
+
+# PHPUnit
+/phpunit.xml # Keep if it contains local config, otherwise commit if it's standard
+/phpunit.result.cache
+/build/coverage/
+/coverage/
+/build/logs/
+# /tests/.phpunit.result.cache # Sometimes PHPUnit creates this in tests dir
+
+# Doctrine
+# SQLite database files (covered by var/)
+# var/data.db
+# var/test.db
+# Migrations: commit your migration files, but not necessarily auto-generated diffs if you squash
+# var/cache/ # Covered by var/
+
+# JWT Keys (if stored in config/jwt/ and not meant to be committed)
+# Usually, private.pem should be gitignored. public.pem can sometimes be committed.
+# If JWT_PASSPHRASE is the main secret and keys are generated on deploy/setup, ignore both.
+/config/jwt/private.pem
+/config/jwt/public.pem
+# /config/jwt/.gitignore # If you want to ensure the directory exists but keys are ignored
+
+# Logs
+*.log
+logs/
+# var/log/ # Covered by var/
+
+# Docker
+# If you have local Docker override files
+docker-compose.override.yml
+.docker/data/ # Or any other persistent data directories for Docker volumes if not needed in git
+
+# IDE / Editor specific
+.idea/
+.vscode/
+*.swp
+*~
+.project
+.settings/
+nbproject/
+
+# OS generated files
+.DS_Store
+Thumbs.db
+ehthumbs.db
+
+# Compiled files or caches
+*.com
+*.class
+*.dll
+*.exe
+*.o
+*.so
+
+# Archives
+*.7z
+*.dmg
+*.gz
+*.iso
+*.jar
+*.rar
+*.tar
+*.zip
+
+# User-specific local configuration (if any)
+# Example:
+# local.settings.php 
