@@ -177,4 +177,51 @@ class AuthEndpointTest extends FunctionalTestCase
         $this->assertArrayHasKey('roles', $responseData);
         $this->assertContains(UserRole::READER->value, $responseData['roles']);
     }
-} 
+
+    public function testChangePasswordSuccess(): void
+    {
+        $this->userTestHelper->registerUser('changepass@example.com', 'oldpass', UserRole::AUTHOR->value);
+        $token = $this->userTestHelper->loginAndGetToken('changepass@example.com', 'oldpass');
+
+        $this->client->request('POST', '/auth/change-password', [], [], [
+            'CONTENT_TYPE' => 'application/json',
+            'HTTP_AUTHORIZATION' => "Bearer $token",
+        ], json_encode([
+            'oldPassword' => 'oldpass',
+            'newPassword' => 'newpass123',
+        ]));
+
+        $this->assertResponseStatusCodeSame(Response::HTTP_NO_CONTENT);
+
+        // login with new password should work
+        $newToken = $this->userTestHelper->loginAndGetToken('changepass@example.com', 'newpass123');
+        $this->assertNotEmpty($newToken);
+
+        // old password should fail
+        $this->client->request('POST', '/auth/login', [], [], [
+            'CONTENT_TYPE' => 'application/json',
+        ], json_encode([
+            'email' => 'changepass@example.com',
+            'password' => 'oldpass',
+        ]));
+        $this->assertResponseStatusCodeSame(Response::HTTP_UNAUTHORIZED);
+    }
+
+    public function testChangePasswordWrongOldPassword(): void
+    {
+        $this->userTestHelper->registerUser('wrongold@example.com', 'correct', UserRole::AUTHOR->value);
+        $token = $this->userTestHelper->loginAndGetToken('wrongold@example.com', 'correct');
+
+        $this->client->request('POST', '/auth/change-password', [], [], [
+            'CONTENT_TYPE' => 'application/json',
+            'HTTP_AUTHORIZATION' => "Bearer $token",
+        ], json_encode([
+            'oldPassword' => 'incorrect',
+            'newPassword' => 'whatever123',
+        ]));
+
+        $this->assertResponseStatusCodeSame(Response::HTTP_BAD_REQUEST);
+        $responseData = json_decode($this->client->getResponse()->getContent(), true);
+        $this->assertEquals('Invalid Password', $responseData['title']);
+    }
+}

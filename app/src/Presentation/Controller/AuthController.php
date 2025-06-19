@@ -4,8 +4,11 @@ namespace App\Presentation\Controller;
 use App\Application\Security\CurrentUserService;
 use App\Domain\User\Command\LoginUserHandler;
 use App\Domain\User\Command\RegisterUserHandler;
+use App\Domain\User\Command\ChangePasswordHandler;
+use App\Domain\User\DTO\ChangePasswordRequest;
 use App\Domain\User\DTO\LoginUserRequest;
 use App\Domain\User\DTO\RegisterUserRequest;
+use App\Domain\User\Exception\InvalidOldPasswordException;
 use App\Domain\User\Exception\UserAlreadyExistsException;
 use App\Shared\Validation\RequestDtoValidator;
 use App\Shared\Exception\ValidationProblemException;
@@ -115,6 +118,42 @@ class AuthController extends AbstractApiController
             return new JsonResponse($jsonUser, Response::HTTP_OK, [], true);
         } catch (\Throwable $e) {
             return $this->createInternalServerErrorResponse('An error occurred while fetching user data.');
+        }
+    }
+
+    #[Route('/change-password', name: 'auth_change_password', methods: ['POST'])]
+    public function changePassword(
+        Request $request,
+        CurrentUserService $currentUserService,
+        RequestDtoResolver $dtoResolver,
+        RequestDtoValidator $validator,
+        ChangePasswordHandler $handler,
+    ): JsonResponse {
+        /** @var ChangePasswordRequest $dto */
+        $dto = $dtoResolver->resolve(ChangePasswordRequest::class, $request);
+
+        try {
+            $validator->validate($dto);
+            $user = $currentUserService->getUser();
+            $handler->handle($user, $dto);
+            return new JsonResponse(null, Response::HTTP_NO_CONTENT);
+        } catch (ValidationProblemException $e) {
+            return $this->createProblemJsonResponse(
+                'Validation Failed',
+                $e->getMessage(),
+                Response::HTTP_UNPROCESSABLE_ENTITY,
+                '/errors/validation-failed',
+                ['invalid-params' => $this->formatValidationErrors($e->getValidationErrors())]
+            );
+        } catch (InvalidOldPasswordException $e) {
+            return $this->createProblemJsonResponse(
+                'Invalid Password',
+                $e->getMessage(),
+                Response::HTTP_BAD_REQUEST,
+                '/errors/invalid-password'
+            );
+        } catch (\Throwable $e) {
+            return $this->createInternalServerErrorResponse('An error occurred while changing password.');
         }
     }
 }
