@@ -238,6 +238,22 @@ Pro operace vyžadující autentizaci je potřeba získat JWT token a posílat h
     }
     ```
 
+**4. Změna hesla uživatele**
+*   **Endpoint**: `POST /auth/change-password`
+*   **Popis**: Umožní přihlášenému uživateli změnit své heslo. Je nutné zadat staré i nové heslo.
+*   **Vyžaduje**: Platný JWT token.
+*   **Příklad**:
+    ```bash
+    curl -X POST http://localhost:8080/auth/change-password \
+    -H "Content-Type: application/json" \
+    -H "Authorization: Bearer <TOKEN>" \
+    -d '{
+        "oldPassword": "currentPass",
+        "newPassword": "newSecurePass"
+    }'
+    ```
+*   **Úspěšná odpověď (204 No Content)**
+
 ---
 
 ### Správa Uživatelů (Admin)
